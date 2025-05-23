@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## プロジェクトツリー
+
+```text
+fitmap-scraper/
+├─ package.json            # "type": "module", scripts, deps
+├─ tsconfig.json
+├─ src/
+│  ├─ index.ts             # エントリ。CLI 引数を受けて orchestrate()
+│  │
+│  ├─ crawler/             # Playwright で HTML を取得
+│  │  ├─ BrowserFactory.ts
+│  │  ├─ AreaCrawler.ts
+│  │  └─ DetailCrawler.ts
+│  │
+│  ├─ parser/              # DOM → オブジェクト
+│  │  ├─ GymListParser.ts
+│  │  └─ GymDetailParser.ts
+│  │
+│  ├─ domain/              # 型と純粋ロジック
+│  │  ├─ models/
+│  │  │  ├─ Gym.ts
+│  │  │  └─ Price.ts
+│  │  └─ services/
+│  │     ├─ PersonalJudge.ts
+│  │     └─ AddressSplitter.ts
+│  │
+│  ├─ exporter/            # 保存・入出力
+│  │  ├─ YamlExporter.ts
+│  │  └─ SqliteExporter.ts   # 将来拡張 (optional)
+│  │
+│  ├─ utils/               # 汎用ツール
+│  │  ├─ Logger.ts
+│  │  └─ Time.ts
+│  │
+│  └─ types/               # 型だけ欲しい場合に npm publish も可
+│     └─ index.d.ts
+│
+└─ tests/                  # vitest / jest など
+   ├─ PersonalJudge.spec.ts
+   └─ GymListParser.spec.ts
+```
+
+## フォルダごとの役割
+
+| フォルダ                | 役割                             | 主要クラス / 関数                                              |
+| ------------------- | ------------------------------ | ------------------------------------------------------- |
+| **crawler**         | Playwright のページ遷移・リトライ・レート制御   | `AreaCrawler`, `DetailCrawler`                          |
+| **parser**          | `$eval` 結果を `GymRaw` (未整形) に変換 | `GymListParser.parseCards()`                            |
+| **domain/models**   | 永続化フォーマットに依存しない POJO           | `Gym`, `Price`                                          |
+| **domain/services** | ドメインロジック（判定・正規化）               | `PersonalJudge.isPersonal()`, `AddressSplitter.split()` |
+| **exporter**        | YAML / DB など外部 I/O 抽象          | `YamlExporter.save(list: Gym[])`                        |
+| **utils**           | ロギング、日付フォーマット等                 | `Logger.debug()`                                        |
+
+## クラス & ファイル命名
+
+| レイヤ             | ファイル                   | 主な公開 API                                                   |                              |
+| --------------- | ---------------------- | ---------------------------------------------------------- | ---------------------------- |
+| crawler         | **BrowserFactory.ts**  | `createBrowser(headless: boolean)`                         |                              |
+|                 | **AreaCrawler.ts**     | `fetchArea(areaId: number): Promise<string[]>` → 店舗 URL 配列 |                              |
+|                 | **DetailCrawler.ts**   | `fetchDetail(url: string): Promise<string>`                |                              |
+| parser          | **GymListParser.ts**   | `parse(html: string): GymRaw[]`                            |                              |
+|                 | **GymDetailParser.ts** | `enrich(raw: GymRaw, html: string): GymRaw`                |                              |
+| domain/models   | **Gym.ts**             | `interface Gym { … }`                                      |                              |
+|                 | **Price.ts**           | `interface Price { … }`                                    |                              |
+| domain/services | **PersonalJudge.ts**   | `judge(raw: GymRaw): {flag: boolean, 'unknown', reason: string}`                      |  |
+| exporter        | **YamlExporter.ts**    | `save(list: Gym[], filePath = 'gyms.yaml')`                |                              |
+| utils           | **Logger.ts**          | `info(), warn(), error()`                                  |                              |

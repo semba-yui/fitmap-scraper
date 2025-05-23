@@ -1,0 +1,11 @@
+metadata:
+  exportedAt: 2025-05-23T13:42:56.762Z
+  totalPrefectures: 2
+  totalGyms: 8
+prefectureSummary:
+  東京都:
+    count: 7
+    personalCount: 7
+  神奈川県:
+    count: 1
+    personalCount: 1

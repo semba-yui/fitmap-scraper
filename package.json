@@ -1,0 +1,36 @@
+{
+  "name": "fitmap-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://semba-yui@github.com/semba-yui/fitmap-scraper.git"
+  },
+  "author": "semba-yui",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/semba-yui/fitmap-scraper/issues"
+  },
+  "homepage": "https://github.com/semba-yui/fitmap-scraper#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "playwright": "^1.52.0",
+    "yaml": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.16.5",
+    "typescript": "^5.8.3"
+  }
+}
